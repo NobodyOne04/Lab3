@@ -1,16 +1,11 @@
 use rand::prelude::*;
 
-trait Protect {
-    fn next_session_key(&self, session_key:&String)->String;
-    fn calc_hash(&self, session_key:&String, val:i64)->String;
+pub struct SessionProtector {
+    pub hash: String
 }
 
-struct SessionProtector {
-    hash: String
-}
-
-impl Protect for SessionProtector {
-    fn next_session_key(&self, session_key:&String)->String {
+impl SessionProtector {
+    pub fn next_session_key(&self, session_key:&String)->String {
         if self.hash == "".to_string(){panic!("Hash code is empty");}
         for idx in 0..self.hash.len() {
             if !self.hash.chars().nth(idx).unwrap().is_digit(10) {panic!("Hash code contains non-digit letter")}
@@ -61,7 +56,7 @@ impl Protect for SessionProtector {
     }
 }
 
-fn get_hash_str()->String {
+pub fn get_hash_str()->String {
     let mut result:String = "".to_string();
     for _ in 0..5 {
         let random: f64 = rand::thread_rng().gen();
@@ -70,16 +65,11 @@ fn get_hash_str()->String {
     result
 }
 
-fn get_session_key()->String {
+pub fn get_session_key()->String {
     let mut result:String = "".to_string();
     for _ in 1..11 {
         let random: f64 = rand::thread_rng().gen();
         result = format!("{}{}", result, (9.0 * random + 1.0).round().to_string().chars().nth(0).unwrap()).to_string();
     }
     result
-}
-
-fn main() {
-    let protector = SessionProtector{hash: get_hash_str()};
-    println!("{:?}", protector.next_session_key(&get_session_key()));
 }

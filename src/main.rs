@@ -2,7 +2,7 @@ use std::env;
 mod handler;
 mod server;
 mod client;
-
+mod protector;
 
 fn main() {
     let args: Vec<String> = env::args().collect();
